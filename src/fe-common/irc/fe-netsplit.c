@@ -255,12 +255,16 @@ static void sig_print_starting(TEXT_DEST_REC *dest)
 	if (!IS_IRC_SERVER(dest->server))
 		return;
 
-	if (!server_ischannel(dest->server, dest->target))
-		return;
-
 	rec = IRC_SERVER(dest->server);
-	if (rec->split_servers != NULL)
+	if (rec->split_servers != NULL) {
+		/* if split_servers exists, the server rec should be
+		   still valid. otherwise, calling server->ischannel
+		   may not be safe. */
+		if (dest->target != NULL && !server_ischannel((SERVER_REC *) rec, dest->target))
+			return;
+
 		print_splits(rec, NULL);
+	}
 }
 
 static int sig_check_splits(void)
