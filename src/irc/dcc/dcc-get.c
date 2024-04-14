@@ -314,6 +314,10 @@ static void ctcp_msg_dcc_send(IRC_SERVER_REC *server, const char *data,
 		addr = "";
 	}
 
+	if (addr == NULL) {
+		addr = "";
+	}
+
 	/* SEND <file name> <address> <port> <size> [...] */
 	params = g_strsplit(data, " ", -1);
 	paramcount = strarray_length(params);
